@@ -4,6 +4,7 @@ import re
 class JobEngine:
     def __init__(self):
         # Initialize any required resources
+        openai.api_key = os.environ.get('OPENAI_API_KEY')
         pass
 
     def get_vetted_list(self, job_details: Dict) -> List[Dict]:
@@ -168,3 +169,66 @@ class JobEngine:
         """Get candidates from database"""
         # Implementation needed to fetch candidates from database
         return []
+
+
+
+  def _llm_evaluate_candidate(self, candidate: Dict, job_details: Dict) -> float:
+        """
+        Use an LLM to refine candidate scoring based on job description and resume analysis.
+        
+        Args:
+            candidate (Dict): Candidate data
+            job_details (Dict): Job details
+        
+        Returns:
+            float: Adjusted score based on LLM evaluation
+        """
+        prompt = f"""
+        You are a hiring assistant. Given the following job description and candidate information, 
+        evaluate how well the candidate fits the role on a scale from 0 to 100.
+
+        Job Details:
+        {job_details}
+
+        Candidate Resume:
+        {candidate}
+
+        Provide a final score (0-100) based on skills, experience, education, and cultural fit.
+        """
+        
+        response = openai.ChatCompletion.create(
+            model="gpt-4-turbo",
+            messages=[{"role": "system", "content": "You are an AI job evaluator."},
+                      {"role": "user", "content": prompt}],
+            temperature=0.7
+        )
+
+        # Extract numerical score
+        score_str = response["choices"][0]["message"]["content"]
+        try:
+            return float(score_str.strip())
+        except ValueError:
+            return 0  # Default if parsing fails
+
+    def soft_filter(self, candidates: List[Dict], job_details: Dict) -> List[Dict]:
+        """
+        Score candidates based on LLM analysis combined with traditional scoring.
+        """
+        scored_candidates = []
+
+        for candidate in candidates:
+            traditional_score = self._calculate_skills_score(candidate, job_details) * 0.3
+            traditional_score += self._calculate_experience_score(candidate, job_details) * 0.3
+            traditional_score += self._calculate_education_score(candidate, job_details) * 0.2
+            traditional_score += self._calculate_additional_score(candidate, job_details) * 0.2
+
+            # LLM Assisted Scoring
+            llm_score = self._llm_evaluate_candidate(candidate, job_details)
+
+            # Weighted combination of both scores
+            final_score = (traditional_score * 0.6) + (llm_score * 0.4)
+
+            candidate['score'] = round(final_score, 2)
+            scored_candidates.append(candidate)
+
+        return scored_candidates
