@@ -2,6 +2,20 @@
 
 A platform that leverages AI to provide vetted job candidates, matching them with suitable job opportunities.
 
+## Tech Stack
+
+- NextJS
+- TailwindCSS
+- Python
+- OpenAI
+- MongoDB + PostgresSQL
+
+## System Design
+
+## Data models
+
+## Job matching engine
+
 ## Project Structure
 
 ### Frontend (`/frontend`)
