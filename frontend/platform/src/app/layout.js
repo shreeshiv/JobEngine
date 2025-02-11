@@ -49,7 +49,7 @@ import {
 import PostJobModal from "@/components/PostJobModal";
 
 const navigation = [
-  { name: "Jobs", href: "#", icon: HomeIcon, current: true },
+  { name: "Jobs", href: "/dashboard", icon: HomeIcon, current: true },
   // { name: "Team", href: "#", icon: UsersIcon, current: false },
   // { name: "Projects", href: "#", icon: FolderIcon, current: false },
   // { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
@@ -72,13 +72,11 @@ function classNames(...classes) {
 
 export default function RootLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [openPostJobModal, setOpenPostJobModal] = useState(false);
 
   return (
-    <html lang="en" class="h-full bg-white">
+    <html lang="en" className="h-full bg-white">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        class="h-full"
       >
         <>
           {/*
@@ -89,12 +87,7 @@ export default function RootLayout({ children }) {
         <body class="h-full">
         ```
       */}
-          {openPostJobModal && (
-            <PostJobModal
-              open={openPostJobModal}
-              setOpen={setOpenPostJobModal}
-            />
-          )}
+
           <div>
             <Dialog
               open={sidebarOpen}

@@ -2,6 +2,7 @@
 
 import { Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import CandidateMatchDetails from "./CandidateMatchDetails";
 
 export default function CandidateDrawer({ open, setOpen, candidate }) {
   if (!candidate) return null;
@@ -11,7 +12,6 @@ export default function CandidateDrawer({ open, setOpen, candidate }) {
       open={open}
       onClose={() => setOpen(false)}
       className="relative z-10"
-      static
     >
       <div className="fixed inset-0 bg-gray-500/75 transition-opacity duration-500 ease-in-out" />
 
@@ -79,6 +79,11 @@ export default function CandidateDrawer({ open, setOpen, candidate }) {
                           </dd>
                         </div>
                       </dl>
+                    </div>
+
+                    {/* Add Match Details Section */}
+                    <div className="border-t border-gray-200 pt-4">
+                      <CandidateMatchDetails candidate={candidate} />
                     </div>
                   </div>
                 </div>

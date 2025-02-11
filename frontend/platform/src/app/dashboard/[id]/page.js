@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import CandidateDrawer from "@/components/CandidateDrawer";
+import JobDetails from "./JobDetails";
 
 const jobDetails = {
   id: 1,
@@ -36,12 +37,13 @@ const jobDetails = {
   ],
 };
 
-export default function JobDetailsPage({ params }) {
+export default function Page({ params }) {
+  const resolvedParams = use(params);
   const [job, setJob] = useState(jobDetails);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // In a real application, you would fetch the job details using the ID
+  // Use params.id directly in useEffect
   useEffect(() => {
     // Fetch job details from API
     // const fetchJobDetails = async () => {
@@ -50,7 +52,8 @@ export default function JobDetailsPage({ params }) {
     //   setJob(data);
     // };
     // fetchJobDetails();
-  }, [params.id]);
+    console.log(resolvedParams.id);
+  }, [resolvedParams.id]);
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 bg-white">

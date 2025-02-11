@@ -1,6 +1,7 @@
 from typing import List, Dict
 import re
-
+import os 
+import openai
 class JobEngine:
     def __init__(self):
         # Initialize any required resources
@@ -20,7 +21,7 @@ class JobEngine:
         # Get candidates from database (implementation needed)
         candidates = self._get_candidates_from_db()
         
-        # Apply hard filters first
+        # This can be just a simple database filtering
         filtered_candidates = self.hard_filter(candidates, job_details)
         
         # Apply soft filters and scoring
